@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Roster Squadre</title>
+  <style>
+    .roster-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* 300px è la larghezza minima di ciascuna "colonna" di squadra. Puoi adattarlo alle tue esigenze */
+    gap: 20px; /* Spazio tra le "colonne" */
+}
+
+    .roster {
+    border: 1px solid #ccc;
+    padding: 10px;
+    display: grid; /* Definisci anche il roster come griglia */
+    grid-template-columns: repeat(4, 1fr); /* Quattro colonne per ciascuna informazione */
+    gap: 10px; /* Spazio tra le celle */
+}
+
+    .roster-header {
+    grid-column: 1 / span 4; /* Unisce le prime 4 colonne per l'intestazione */
+    background-color: #f5f5f5; /* Colore di sfondo per l'intestazione */
+    padding: 10px;
+    text-align: center;
+}
+
+  .btn-reindirizza {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #007BFF;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .btn-reindirizza:hover {
+        background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h1>Roster delle Squadre</h1>
+  <div class="roster-container" id="rosterContainer"></div>
+
+  <script>
+    async function fetchRosters() {
+      const response = await fetch('/rosters');
+      const data = await response.json();
+      return data;
+    }
+
+    async function renderRosters() {
+    const rosterContainer = document.getElementById('rosterContainer');
+    const rosters = await fetchRosters();
+    const roleOrder = ["Por", "Dc", "Dc;Dd", "Dd;Dc", "Dd;Dc;E", "Dd;Ds;Dc", "Dd;Ds;E", "Dd;E", "Ds;Dc", "Ds;Dc;E", "Ds;E", "C", "C;T", "C;W", "C;W;T", "E", "E;C", "E;W", "M", "M;C", "T", "W", "W;T", "Pc", "A", "W;A", "T;A"];
+
+    function comparePlayers(a, b) {
+    // Prima, confronta in base all'ordine del ruolo
+    const roleAIndex = roleOrder.indexOf(a.ruolo);
+    const roleBIndex = roleOrder.indexOf(b.ruolo);
+    if (roleAIndex < roleBIndex) return -1;
+    if (roleAIndex > roleBIndex) return 1;
+
+    // Se i ruoli sono gli stessi, confronta in base al prezzo (dal più alto al più basso)
+    return b.prezzo - a.prezzo;
+}
+
+    // Assicurati di avere una lista di tutte le squadre, anche quelle senza giocatori
+    const allRosters = Array.from(new Set([...rosters.map(r => r.squadra)]));
+
+allRosters.forEach(squadra => {
+    const rosterData = rosters.find(r => r.squadra === squadra) || { squadra, budget: 800, giocatori: [] };
+
+    const rosterDiv = document.createElement('div');
+    rosterDiv.classList.add('roster');
+
+    const rosterHeader = document.createElement('div');
+    rosterHeader.classList.add('roster-header');
+    rosterHeader.textContent = `${rosterData.squadra} - Budget: ${rosterData.budget} - Giocatori: ${rosterData.giocatori.length}`;
+    rosterDiv.appendChild(rosterHeader);
+
+    // Qui ordini la lista dei giocatori
+    rosterData.giocatori.sort(comparePlayers);
+
+    if (rosterData.giocatori.length === 0) {
+        const noPlayersItem = document.createElement('div');
+        noPlayersItem.textContent = "Nessun giocatore in rosa";
+        noPlayersItem.style.gridColumn = '1 / span 4'; // Span all columns
+        rosterDiv.appendChild(noPlayersItem);
+    } else {
+        rosterData.giocatori.forEach(giocatore => {
+            const ruoloDiv = document.createElement('div');
+            ruoloDiv.textContent = giocatore.ruolo;
+            rosterDiv.appendChild(ruoloDiv);
+
+            const nomeDiv = document.createElement('div');
+            nomeDiv.textContent = giocatore.giocatore;
+            rosterDiv.appendChild(nomeDiv);
+
+            const squadraDiv = document.createElement('div');
+            squadraDiv.textContent = giocatore.squadra;
+            rosterDiv.appendChild(squadraDiv);
+
+            const prezzoDiv = document.createElement('div');
+            prezzoDiv.textContent = `${giocatore.prezzo} fmln`;  // Modificato qui
+            rosterDiv.appendChild(prezzoDiv);
+        });
+    }
+    
+    rosterContainer.appendChild(rosterDiv);
+});
+}
+
+
+
+    renderRosters();
+  </script>
+
+  <a href="index.html" class="btn-reindirizza">Torna alla Home</a>
+
+</body>
+</html>

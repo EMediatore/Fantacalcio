@@ -1,0 +1,43 @@
+apri il prompt dei comandi ed esegui 
+cd Documents
+cd_SQLite
+node server.js
+
+poi vai su http://localhost:3000/
+
+
+PULIZIA DATABASE
+UPDATE Giocatori SET Svincolato = 0, ID_SquadraFanta = NULL, ID_assegnazione = NULL, ID_estrazione = NULL, Prezzo = NULL, ID_current_player = 0;
+
+UPDATE Rose SET Budget = 800, in_Rosa = 0;
+
+
+Ho un progetto composto da:
+1. due file, index.html e pagina2.html
+2. file server.js (libreria express installata) e node.js installato e le estensioni per sqlite.
+3. database in SQLite, con due tabelle aventi questa struttura:
+"CREATE TABLE Giocatori (
+    Nome              TEXT    UNIQUE,
+    Ruolo             TEXT    NOT NULL,
+    Squadra           TEXT    NOT NULL,
+    [Valore FG]       INTEGER NOT NULL,
+    ID                INTEGER UNIQUE
+                              PRIMARY KEY,
+    Svincolato        INTEGER DEFAULT (0) 
+                              CHECK ( (Svincolato = 0 OR 
+                                       Svincolato = 1) ),
+    ID_SquadraFanta   INTEGER REFERENCES Rose (ID_Rosa),
+    ID_assegnazione   INTEGER UNIQUE,
+    ID_estrazione     INTEGER UNIQUE,
+    Prezzo            INTEGER,
+    ID_current_player INTEGER DEFAULT (0) 
+);
+" "CREATE TABLE Rose (
+    ID_Rosa INTEGER PRIMARY KEY AUTOINCREMENT,
+    Nome    TEXT    NOT NULL,
+    Budget  INTEGER NOT NULL
+                    DEFAULT (800),
+    in_Rosa INTEGER DEFAULT (0) 
+);
+"
+Il progetto serve per: estrarre casualmente i giocatori dal database e assegnarli alle squadre in base al prezzo di aggiudicazione (che inserisco io manualmente). Il progetto è interamente offline, nulla di complicato.
