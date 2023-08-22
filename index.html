@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FantaCalcio Estrazione</title>
+    <style>
+        body {
+            display: flex;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* Ogni sezione prende un terzo dello schermo */
+        body > div {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2%;
+        }
+
+        /* Nuove classi per le sezioni laterali */
+    .sezioneSinistra,
+    .sezioneDestra {
+        flex: 1;
+        padding: 2%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .sezioneDestra {
+        background-color: #f0f0f0; /* Colore di sfondo per la sezione destra */
+    }
+
+        #sezioneCentrale {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Cambiato da space-between a center */
+    height: 100%;
+}
+
+.sezioneAlta h1 {
+    margin-bottom: 10px; /* Ridotto da 25px a 10px */
+}
+
+.sezioneCentrale {
+    font-size: 1.2em; 
+    margin: 20px 0; /* Aggiunto un margine sopra e sotto per separare leggermente dalla sezioneAlta e sezioneBassa */
+}
+
+.sezioneBassa {
+    margin-top: 20px; /* Ridotto da 50px a 20px */
+}
+
+/* Stili esistenti */
+.info {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+
+        #sezioneCentrale h1,
+        #sezioneCentrale select,
+        #sezioneCentrale label,
+        #sezioneCentrale button {
+            margin: 10px 0;
+        }
+
+        #sezioneCentrale .info {
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        #squadre button {
+            margin-bottom: 10px;
+            background-color: white;
+            border: 1px solid black;
+            padding: 5px 15px;
+            cursor: pointer;
+            width: 150px; 
+        }
+
+        #squadre button:hover {
+            background-color: #FFD700;
+        }
+
+        .btn-reindirizza {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #007BFF;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .btn-reindirizza:hover {
+        background-color: #0056b3;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="sezioneSinistra">
+    <div id="infoGiocatore">
+    <select id="elencoGiocatori" onchange="aggiornaInfoGiocatore()">
+        <!-- Qui verranno inserite le opzioni dei giocatori via JavaScript -->
+    </select>
+    
+    </div>
+    <div>
+        <strong>Ruolo:</strong> <span id="ruoloGiocatore"></span>
+    </div>
+
+    <div>
+        <strong>Assegnato a:</strong> <span id="squadraGiocatore"></span>
+        <label>Prezzo: <span id="prezzoGiocatore"></span></label>
+        <button id="cancellaAssegnazione" onclick="cancellaAssegnazioneFunc()">Cancella assegnazione</button>
+    </div>
+    </div>
+    <!-- Banda centrale (bianca della bandiera) con la sezione di estrazione -->
+<div id="sezioneCentrale">
+    <!-- ... -->
+
+    <div class="sezioneAlta">
+
+    <!-- Aggiungi questo sotto al div risultatoEstrazione -->
+    
+    </div>
+
+<!-- ... -->
+
+    <div class="sezioneAlta">
+        <h1>Estrazione Giocatore</h1>
+    </div>
+    
+    <div class="sezioneCentrale">
+        <select id="ruoloSelect">
+            <option value="Por">Portiere</option>
+            <option value="Dif">Difensore</option>
+            <option value="Cen">Centrocampista</option>
+            <option value="Att">Attaccante</option>
+        </select>
+
+        <div>
+            <span class="info"><strong>Nome:</strong> <span id="nomeEstratto"></span></span>
+            <span class="info"><strong>Ruolo:</strong> <span id="ruoloEstratto"></span></span>
+            <span class="info"><strong>Squadra:</strong> <span id="squadraEstratta"></span></span>
+        </div>
+    </div>
+    
+    <div class="sezioneBassa">
+        <label for="prezzo">Prezzo:</label>
+        <input type="number" id="prezzo">
+        <button onclick="estraiGiocatore()">Estrai</button>
+        <button id="ultimoGiocatoreBtn" onclick="mostraUltimoEstratto()">Ultimo Estratto</button>
+        <div id="risultatoEstrazione"></div>
+    </div>
+</div>
+
+    <div class="sezioneDestra">
+    <div id="messaggioAssegnazione"></div>
+    <!-- Banda destra (rossa della bandiera) con i bottoni delle squadre -->
+    <div id="squadre">
+      <button onclick="assegnaGiocatore(1)">Squadra 1</button>
+      <button onclick="assegnaGiocatore(2)">Squadra 2</button>
+      <button onclick="assegnaGiocatore(3)">Squadra 3</button>
+      <button onclick="assegnaGiocatore(4)">Squadra 4</button>
+      <button onclick="assegnaGiocatore(5)">Squadra 5</button>
+      <button onclick="assegnaGiocatore(6)">Squadra 6</button>
+      <button onclick="assegnaGiocatore(7)">Squadra 7</button>
+      <button onclick="assegnaGiocatore(8)">Squadra 8</button>
+      <button onclick="assegnaGiocatore(9)">Squadra 9</button>
+      <button onclick="assegnaGiocatore(10)">Squadra 10</button>
+      <button onclick="assegnaGiocatore(11)">Squadra 11</button>
+      <button onclick="assegnaGiocatore(12)">Squadra 12</button>
+    </div>
+    <a href="pagina2.html" class="btn-reindirizza">Vai alle rose</a>
+    </div>
+    
+    <script>
+
+      document.getElementById('ruoloSelect').addEventListener('change', function() {
+      const ruoloSelezionato = this.value;
+      popolaElencoGiocatori(ruoloSelezionato);
+      });
+      document.addEventListener('DOMContentLoaded', function() {
+      const ruoloIniziale = document.getElementById('ruoloSelect').value;
+      popolaElencoGiocatori(ruoloIniziale);
+      });
+    async function estraiGiocatore() {
+        const ruolo = document.getElementById('ruoloSelect').value;
+        const response = await fetch(`/estraiGiocatore?ruolo=${ruolo}`);
+        const data = await response.json();
+
+        // Controlla se esiste una chiave "message" nella risposta.
+        if (data.message) {
+            alert(data.message);
+            return;
+        }
+
+        // Aggiorna i campi del giocatore estratto sulla pagina
+        document.getElementById('nomeEstratto').innerText = data.Nome;
+        document.getElementById('ruoloEstratto').innerText = data.Ruolo;
+        document.getElementById('squadraEstratta').innerText = data.Squadra;
+
+        // Qui aggiungiamo la chiamata per popolare la lista dei giocatori
+    const listaGiocatori = await fetch(`/getListaGiocatori?ruolo=${ruolo}`);
+    const giocatori = await listaGiocatori.json();
+
+    const select = document.getElementById('elencoGiocatori');
+    select.innerHTML = ''; // Rimuoviamo le vecchie opzioni
+
+    for (let giocatore of giocatori) {
+        const option = document.createElement('option');
+        option.value = giocatore.ID;
+        option.textContent = giocatore.Nome;
+        select.appendChild(option);
+    }
+
+    //aggiornaInfoGiocatore(); // Aggiorniamo le info del giocatore selezionato
+}
+
+async function popolaElencoGiocatori(ruolo) {
+    try {
+        // Pulisci le opzioni esistenti
+        const elencoGiocatori = document.getElementById('elencoGiocatori');
+        elencoGiocatori.innerHTML = '';
+
+        const response = await fetch(`/getListaGiocatori?ruolo=${ruolo}`);
+        const giocatori = await response.json();
+
+        giocatori.forEach(giocatore => {
+            const option = document.createElement('option');
+            option.value = giocatore.ID;
+            option.text = giocatore.Nome;
+            elencoGiocatori.appendChild(option);
+        });
+    } catch (error) {
+        console.error("Si è verificato un errore:", error);
+    }
+}
+
+
+async function mostraUltimoEstratto() {
+    try {
+        // Fai una richiesta all'API per ottenere l'ultimo giocatore estratto
+        const response = await fetch("/ultimogiocatoreEstratto");
+        const data = await response.json();
+
+        // Se la risposta contiene un messaggio di errore, mostralo
+        if (data.error) {
+            alert("Errore: " + data.error);
+            return;
+        }
+
+        // Aggiorna i campi del giocatore estratto sulla pagina con i dati ottenuti
+        document.getElementById('nomeEstratto').innerText = data.Nome;
+        document.getElementById('ruoloEstratto').innerText = data.Ruolo;
+        document.getElementById('squadraEstratta').innerText = data.Squadra;
+    } catch (error) {
+        console.error("Si è verificato un errore:", error);
+        alert("Errore nel caricamento dei dati dell'ultimo giocatore estratto.");
+    }
+}
+
+
+    function assegnaGiocatore(squadraID) {
+        const nomeGiocatore = document.getElementById('nomeEstratto').innerText;
+        const prezzo = document.getElementById('prezzo').value;
+
+        // Ora non c'è bisogno di passare l'idGiocatore come query parameter, poiché viene gestito internamente dal server
+        fetch(`/assegna?idSquadra=${squadraID}&prezzo=${prezzo}`)
+        .then(response => response.json())
+        .then(data => {
+            const messaggio = document.getElementById('messaggioAssegnazione');
+            
+            // Usa il nome del giocatore dalla risposta dell'API
+            messaggio.innerText = `${data.NomeGiocatore} assegnato a ${data.NomeSquadra} per ${prezzo} fantamilioni`;
+                
+                setTimeout(() => {
+                    messaggio.innerText = ''; // Rimuove il messaggio dopo 6 secondi
+                }, 6000);
+
+                document.getElementById('prezzo').value = ''; // Qui resetta il campo del prezzo
+                // Qui resetta i campi del giocatore estratto
+                document.getElementById('nomeEstratto').innerText = '';
+                document.getElementById('ruoloEstratto').innerText = '';
+                document.getElementById('squadraEstratta').innerText = '';
+            })
+            .catch(error => {
+                console.error("Si è verificato un errore:", error);
+            });
+    }
+
+    function setCurrentPlayerFunc() {
+    const selectedPlayerId = document.getElementById("elencoGiocatori").value;
+    const prezzo = document.getElementById("prezzoGiocatore").textContent;
+
+    // Supponiamo che tu stia usando fetch
+    fetch(`/setCurrentPlayer?id=${selectedPlayerId}&prezzo=${prezzo}`, {
+        method: 'GET',
+    }).then(response => response.json()).then(data => {
+        if (data.success) {
+            alert("Giocatore impostato con successo!");
+        } else {
+            alert("Errore nell'impostazione del giocatore.");
+        }
+    });
+}
+    async function aggiornaInfoGiocatore() {
+    const idGiocatore = document.getElementById('elencoGiocatori').value;
+    const response = await fetch(`/getInfoGiocatore?id=${idGiocatore}`);
+    const data = await response.json();
+    
+    document.getElementById('ruoloGiocatore').innerText = data.Ruolo;
+    document.getElementById('squadraGiocatore').innerText = data.NomeSquadra || 'Non assegnato';
+    document.getElementById("prezzoGiocatore").textContent = data.Prezzo || "";
+}
+
+
+async function cancellaAssegnazioneFunc() {
+    try {
+        const response = await fetch("/cancellaAssegnazione");
+        const data = await response.json();
+        
+        if (data.error) {
+            alert("Errore: " + data.error);
+        } else {
+            alert(data.message);
+            // Aggiorna l'interfaccia utente se necessario (ad esempio, reimpostando i valori o aggiornando le visualizzazioni)
+            document.getElementById("squadraGiocatore").textContent = "";
+            document.getElementById("prezzoGiocatore").textContent = "";
+        }
+    } catch (error) {
+        console.error("Si è verificato un errore:", error);
+        alert("Si è verificato un errore durante la cancellazione dell'assegnazione.");
+    }
+}
+
+</script>
+
+</body>
+
+</html>
